@@ -1,0 +1,9 @@
+# folders
+dist
+build
+node_modules
+cache
+bak_*
+
+# files
+.DS_Store

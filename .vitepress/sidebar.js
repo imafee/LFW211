@@ -1,0 +1,18 @@
+export default [
+  { text: "01.Course Introduction", link: "/intro/" },
+  { text: "02.Setting Up", link: "/setting/" },
+  { text: "03.The Node Binary", link: "/binary/" },
+  { text: "04.Debugging & Diagnostics", link: "/debug/" },
+  { text: "05.Key JavaScript Concepts", link: "/javascript/" },
+  { text: "06.Packages & Dependencies", link: "/package/" },
+  { text: "07.Node’s Module System", link: "/module/" },
+  { text: "08.Asynchronous Control Flow", link: "/async/" },
+  { text: "09.Node’s Event System", link: "/event/" },
+  { text: "10.Handling Errors", link: "/error/" },
+  { text: "11.Using Buffers", link: "/buffer/" },
+  { text: "12.Working with Streams", link: "/stream/" },
+  { text: "13. Interacting with the File System", link: "/fs/" },
+  { text: "14. Process & Operating System", link: "/os/" },
+  { text: "15. Creating Child Processes", link: "/child-process/" },
+  { text: "16. Writing Unit Tests", link: "/unit-test/" },
+];
