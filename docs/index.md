@@ -1,4 +1,5 @@
 ---
+aside: false
 sidebar: false
 outline: false
 prev: false

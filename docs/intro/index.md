@@ -20,7 +20,7 @@
 
 ## 认识你的导师
 
-![David Mark Clements](../assets/image/01.instructor-david.png)
+![David Mark Clements](/assets/image/01.instructor-david.png)
 
 大卫·马克·克莱门茨([David Mark Clements](https://github.com/davidmarkclements)) 是一位首席架构师、技术作者、演说家和 OSS 创建者，专门研究 Node.js 和浏览器 JavaScript。
 
