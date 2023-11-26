@@ -4,7 +4,7 @@
 
 ## 章节概述
 
-Node 在许多平台上工作，在每个平台上安装 Node 的方法有很多。这篇简短的序言章节介绍了在 macOS、Linux 和 Windows 机器上设置 Node.js 的最佳实践。
+Node 可以在许多平台上工作，安装 Node 的方法有很多。这篇章节介绍了在 macOS、Linux 和 Windows 机器上设置 Node.js 的最佳实践。
 
 ## 学习目标
 
@@ -24,7 +24,7 @@ Node 也可以直接从 Node.js 网站安装。同样在 macOS 和 Linux 上，�
 
 **强烈建议**，如果 Node 是通过操作系统软件包管理器或直接通过网站安装的，则在继续执行以下部分之前，**应将其完全卸载**。
 
-## 安装 nodejs
+## 推荐这样安装 Nodejs
 
 ### on MacOS and Linux
 
@@ -35,9 +35,9 @@ Node 也可以直接从 Node.js 网站安装。同样在 macOS 和 Linux 上，�
 在 windows 上安装 Node.js 推荐的 Node 版本管理器是 jasongin/[nvs](https://github.com/jasongin/nvs)。
 nvs 版本管理器实际上是跨平台的，因此它可以在 macOS 和 Linux 上使用，但 nvm 在 macOS 和 Linux 用户中的使用更为传统。
 
-### check
+### 检查安装成功与否
 
-安装完毕 Node 版本管理器，然后安装完毕 Node 相应版本之后
+安装完毕 Node 版本管理器，然后也安装完毕 Node 相应版本之后
 
 ```shell
 node -v

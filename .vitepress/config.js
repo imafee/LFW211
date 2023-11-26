@@ -24,7 +24,7 @@ export default defineConfig({
       pattern: `${config["repo-url"]}/edit/main/:path`,
       text: `Edit this page on ${config["repo-url"]}`,
     },
-    lastUpdated: true,
+    lastUpdated: false,
     search: {
       provider: "local",
     },
