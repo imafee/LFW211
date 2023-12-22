@@ -2,25 +2,26 @@
 
 [lab](lab) | [check](check)
 
-## Chapter Overview
+## 章节概述
 
-In Node.js the module is a unit of code. Code should be divided up into modules and then composed together in other modules. Packages expose modules, modules expose functionality. But in Node.js a file can be a module as well, so libraries are also modules. In this chapter we'll learn how to create and load modules. We'll also be taking a cursory look at the difference between language-native EcmaScript Modules (ESM) and the CommonJS
-(CJS) module system that Node used (and still uses) prior to the introduction of the EcmaScript Module system into JavaScript itself.
+在 Node.js 中，模块是一个代码单元。代码应该被划分为多个模块，然后在其他模块中组合在一起。包公开模块，模块公开功能。但是在 Node.js 中，文件也可以是模块，所以库也是模块。
+在本章中，我们将学习如何创建和加载模块。我们还将粗略地了解语言原生 EcmaScript 模块（ESM）和 CommonJS（CJS）模块系统之间的区别，在将 EcmaScript module 系统引入 JavaScript 之前，Node 使用了该模块系统（现在仍在使用）。
 
 ## Learning Objectives
 
-By the end of this chapter, you should be able to:
+在本章结束时，您应该能够：
 
-- Learn how to load modules.
-- Discover how to create modules.
-- Understand the interoperability challenges between ESM and CJS.
-- Lookup a modules file path.
-- Detect whether a module is the entry point of an application.
+- 了解如何加载模块。
+- 了解如何创建模块。
+- 了解 ESM 和 CJS 之间的互操作性挑战。
+- 查找模块文件路径。
+- 检测模块是否是应用程序的入口点。
 
 ## Loading a Module with CJS
 
-By the end of Chapter 6, we had a my-package folder, with a package.json file and an index.js file.
-The package.json file is as follows:
+到第 6 章结束时，我们有了一个 my-package 文件夹，其中有一个 package.json 文件和一个 index.js 文件。
+
+package.json 文件如下所示：
 
 ```json
 {
@@ -45,7 +46,7 @@ The package.json file is as follows:
 }
 ```
 
-The index.js file has the following content:
+index.js 文件包含以下内容：
 
 ```js
 "use strict";
@@ -53,17 +54,17 @@ console.log("my-package started");
 process.stdin.resume();
 ```
 
-Let's make sure the dependencies are installed.
-
-On the command line, with the my-package folder as the current working directory run the install command:
+确保已安装依赖项，在命令行上，以 my package 文件夹作为当前工作目录，运行 install 命令：
 
 ```shell
 npm install
 ```
 
-As long as Pino is installed, the module that the Pino package exports can be loaded.
-Let's replace the console.log statement in our index.js file with a logger that we instantiate from the Pino module.
-Modify the index.js file to the following:
+只要安装了 Pino，就可以加载 Pino 包导出的模块。
+
+让我们将 index.js 文件中的 console.log 语句替换为从 Pino 模块实例化的记录器。
+
+将 index.js 文件修改为以下内容：
 
 ```js
 "use strict";
@@ -73,26 +74,24 @@ logger.info("my-package started");
 process.stdin.resume();
 ```
 
-Now the Pino module has been loaded using require. The require function is passed a
-package's namespace, looks for a directory with that name in the node_modules folder and returns the exported value from the main file of that package.
+现在已经使用 require 加载了 Pino 模块。require 函数传递了包的命名空间，在 nod_modules 文件夹中查找具有该名称的目录，并从该包的主文件返回导出的值。
 
-When we require the Pino module we assign the value returned from require to the constant: pino.
+当我们需要 Pino 模块时，我们将从 require 返回的值分配给常量：Pino。在这种情况下，Pino 模块导出一个函数，因此 Pino 引用了一个创建记录器的函数。
 
-In this case the Pino module exports a function, so pino references a function that creates a logger.
+我们将调用 pin（）的结果分配给记录器引用。然后调用 logger.info 以生成日志消息。
 
-We assign the result of calling pino() to the logger reference. Then logger.info is called to generate a log message.
-
-Now if we run npm start we should see a JSON formatted log message:
+现在，如果我们运行 npm-start，我们应该会看到一条 JSON 格式的日志消息：
 ![07.nodeModuleSystem.loadingModulewithCJS01.npm-start](/assets/image/07.nodeModuleSystem.loadingModulewithCJS01.npm-start.png)
-Hit CTRL-C to exit the process.
-To understand the full algorithm that require uses to load modules, see Node.js
+点击 CTRL-C 退出进程。
+
+要了解加载模块所需的完整算法，请参阅 Node.js
 Documentation, [Folders as modules](https://nodejs.org/docs/latest-v18.x/api/modules.html#modules_all_together).
 
-## Creating a CJS Module
+## 创建 CJS 模块
 
-The result of require won't always be a function that when called generates an instance, as in the case of Pino. The require function will return whatever is exported from a module.
+require 的结果并不总是在调用时生成实例的函数，就像 Pino 的情况一样。require 函数将返回从模块导出的内容。
 
-Let's create a file called format.js in the my-package folder:
+让我们在 my-package 包文件夹中创建一个名为 format.js 的文件：
 
 ```js
 "use strict";
@@ -105,10 +104,9 @@ const upper = (str) => {
 module.exports = { upper: upper };
 ```
 
-We created a function called upper which will convert any input to a string and convert that string to an upper-cased string. Whatever is assigned to module.exports will be the value that is returned when the module is required. The require function returns
-the module.exports of the module that it is loading. In this case, module.exports is assigned to an object, with an upper key on it that references the upper function.
+我们创建了一个名为 upper 的函数，它将把任何输入转换为字符串，并将该字符串转换为大写字符串。分配给 module.exports 的值将是在需要模块时返回的值。require 函数返回正在加载的模块的 module.exports。在这种情况下，module.exports 被分配给一个对象，对象上有一个引用上级函数的上键。
 
-The format.js file can now be loaded into our index.js file as a local module. Modify index.js to the following:
+format.js 文件现在可以作为本地模块加载到我们的 index.js 文件中。将 index.js 修改为以下内容：
 
 ```js
 "use strict";
@@ -119,14 +117,11 @@ logger.info(format.upper("my-package started"));
 process.stdin.resume();
 ```
 
-The format.js file is loaded into the index.js file by passing a path into require. The extension (.js) is allowed but not necessary. So require('./format') will return
-the module.exports value in format.js, which is an object that has
-an upper method. The format.upper method is called within the call
-to logger.info which results in an upper-cased string "MY-PACKAGE STARTED" being passed to logger.info.
+format.js 文件通过将路径传递到 require 中而加载到 index.js 文件中。扩展名（.js）是允许的，但不是必需的。因此，require（'./format'）将返回 format.js 中的 module.exports 值，format.js 是一个具有上层方法的对象。format.upper 方法在对 logger.info 的调用中被调用，这将导致一个大写字符串“MY-PACKAGE STARTED”被传递给 logger.ininfo。
 
-Now we have both a package module (pino) and a local module (format.js) loaded and used in the index.js file.
+现在，我们已经加载了一个包模块（pino）和一个本地模块（format.js），并在 index.js 文件中使用。
 
-We can see this in action by running npm start:
+我们可以通过运行 npm start 看到这一点：
 
 ![07.nodeModuleSystem.creatingCJSModule.npm-start](/assets/image/07.nodeModuleSystem.creatingCJSModule.npm-start.png)
 

@@ -2,19 +2,19 @@
 
 [lab](lab) | [check](check)
 
-## Chapter Overview
+## 章节概述
 
-The Node.js ecosystem of packages is very large. There are more than 1.8 million packages on the npm Registry. While many of these packages are frontend JavaScript libraries, whether a package is for Node or the frontend or both, the npm client and its associated manifest file format have been fundamental to enabling this growth. In this section we will explore how to create and manage packages with the npm client, the package manager
-which comes bundled with Node.js.
+Node.js 包生态系统非常庞大。 npm 注册表上有超过 180 万个包。 虽然其中许多包都是前端 JavaScript 库，但无论包是用于 Node 还是前端或两者，npm 客户端及其关联的清单文件格式都是实现这种增长的基础。
+在本节中，我们将探讨如何使用 npm 客户端（与 Node.js 捆绑在一起的包管理器）创建和管理包。
 
-## Learning Objectives
+## 学习目标
 
-By the end of this chapter, you should be able to:
+读完本章后，您应该能够：
 
-- Find out how to quickly generate a package.json file.
-- Understand the difference between production and development dependencies.
-- Grasp the SemVer versioning format.
-- Learn about Package Scripts.
+- 了解如何快速生成 package.json 文件。
+- 了解生产环境和开发依赖关系之间的区别。
+- 掌握 SemVer 版本控制格式。
+- 了解包的脚本。
 
 ## Packages & Dependencies
 

@@ -2,5 +2,5 @@
 
 await Promise.all([
   // $`node ./stackTraceLimit/app.cjs`, // 默认值10
-  $`node --stack-trace-limit=5 ./stackTraceLimit/app.cjs`,
+  $`node --stack-trace-limit=15 ./stackTraceLimit/app.cjs`,
 ]);

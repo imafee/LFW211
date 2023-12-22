@@ -1,6 +1,7 @@
 import { defineConfig } from "vitepress";
 import pkg from "../package.json";
 import sidebar from "./sidebar.js";
+import baidu from "./head.baidu.js";
 let { name, description, homepage, bugs, license, author, config } = pkg;
 
 // https://vitepress.dev/reference/site-config
@@ -11,6 +12,18 @@ export default defineConfig({
   srcDir: "./docs",
   assetsDir: "static",
   cleanUrls: true,
+  head: [
+    [
+      "link",
+      {
+        rel: "icon",
+        type: "image/png",
+        sizes: "16x16",
+        href: "./assets/favicon-16x16.png",
+      },
+    ],
+    ["script", {}, baidu],
+  ],
   // https://vitepress.dev/reference/default-theme-config
   themeConfig: {
     nav: [{ text: "Home", link: "/" }],
