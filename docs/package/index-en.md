@@ -4,8 +4,7 @@
 
 ## Chapter Overview
 
-The Node.js ecosystem of packages is very large. There are more than 1.8 million packages on the npm Registry. While many of these packages are frontend JavaScript libraries, whether a package is for Node or the frontend or both, the npm client and its associated manifest file format have been fundamental to enabling this growth. In this section we will explore how to create and manage packages with the npm client, the package manager
-which comes bundled with Node.js.
+The Node.js ecosystem of packages is very large. There are more than 1.8 million packages on the npm Registry. While many of these packages are frontend JavaScript libraries, whether a package is for Node or the frontend or both, the npm client and its associated manifest file format have been fundamental to enabling this growth. In this section we will explore how to create and manage packages with the npm client, the package manager which comes bundled with Node.js.
 
 ## Learning Objectives
 
