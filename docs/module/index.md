@@ -7,7 +7,7 @@
 在 Node.js 中，模块是一个代码单元。代码应该被划分为多个模块，然后在其他模块中组合在一起。包公开模块，模块公开功能。但是在 Node.js 中，文件也可以是模块，所以库也是模块。
 在本章中，我们将学习如何创建和加载模块。我们还将粗略地了解语言原生 EcmaScript 模块（ESM）和 CommonJS（CJS）模块系统之间的区别，在将 EcmaScript module 系统引入 JavaScript 之前，Node 使用了该模块系统（现在仍在使用）。
 
-## Learning Objectives
+## 学习目标
 
 在本章结束时，您应该能够：
 
@@ -17,7 +17,7 @@
 - 查找模块文件路径。
 - 检测模块是否是应用程序的入口点。
 
-## Loading a Module with CJS
+## 使用 CJS 加载模块
 
 到第 6 章结束时，我们有了一个 my-package 文件夹，其中有一个 package.json 文件和一个 index.js 文件。
 
@@ -125,17 +125,18 @@ format.js 文件通过将路径传递到 require 中而加载到 index.js 文件
 
 ![07.nodeModuleSystem.creatingCJSModule.npm-start](/assets/image/07.nodeModuleSystem.creatingCJSModule.npm-start.png)
 
-## Detecting Main Module in CJS
+## 检测 CJS 中的主模块
 
-The "start" script in the package.json file executes node index.js. When a file is called with node that file is the entry point of a program. So currently my-package is behaving more like an application or service than a package module.
+package.json 文件中的`start`脚本执行 node index.js。 当使用 node 调用文件时，该文件是程序的入口点。 因此，目前 my-package 的行为更像是应用程序或服务，而不是包模块。
 
-In its current form, if we require the index.js file it will behave exactly the same way:
+在当前的形式下，如果我们需要 index.js 文件，它将以完全相同的方式运行：
 ![07.nodeModuleSystem.detectingMainModuleinCJS.node-e](/assets/image/07.nodeModuleSystem.detectingMainModuleinCJS.node-e.png)
-In some situations we may want a module to be able to operate both as a program and as a module that can be loaded into other modules.
 
-When a file is the entry point of a program, it's the main module. We can detect whether a particular file is the main module.
+在某些情况下，我们可能希望模块既能够作为程序运行，又能够作为可以加载到其他模块中的模块运行。
 
-Let's modify the index.js file to the following:
+当文件是程序的入口点时，它就是主模块。 我们可以检测特定文件是否是主模块。
+
+我们将 index.js 文件修改为以下内容：
 
 ```js
 "use strict";
@@ -153,29 +154,30 @@ if (require.main === module) {
 }
 ```
 
-Now the index.js file has two operational modes.
-If it is loaded as a module, it will export a function that reverses and upper-cases a string:
+现在 index.js 文件有了两种操作模式。
+如果它作为模块加载，它将导出一个反转字符串并将其大写的函数：
 ![07.nodeModuleSystem.detectingMainModuleinCJS.node-p](/assets/image/07.nodeModuleSystem.detectingMainModuleinCJS.node-p.png)
-But if it's executed with node, it will exhibit the original behavior:
+但如果用 node 执行，它会表现出原来的行为：
+
 ![07.nodeModuleSystem.detectingMainModuleinCJS.node-p2](/assets/image/07.nodeModuleSystem.detectingMainModuleinCJS.node-p2.png)
 
-## Converting a Local CJS File to ESM File
+## 将本地 CJS 文件转换为 ESM 文件
 
-EcmaScript Modules (ESM) was introduced to the EcmaScript specification as part of EcmaScript 2015 (formerly known as EcmaScript 6). One of the main goals of the specification was for module includes to be statically analyzable, which allows browsers to pre-parse out imports similar to collecting any script tags as the web page loads.
+EcmaScript 模块 (ESM) 作为 EcmaScript 2015（以前称为 EcmaScript 6）的一部分引入到 EcmaScript 规范中。 该规范的主要目标之一是使模块包含可静态分析，这允许浏览器预先解析导入，类似于在网页加载时收集任何脚本标签。
 
-Due to the complexity involved with retrofitting a static module system into a dynamic language, it took about three years for major browsers to implement it. It took even longer for ESM to be implemented in Node.js, since interoperability with the Node's existing CJS module system has been a significant challenge - and there are still pain points as we will
-see.
+由于将静态模块系统改造为动态语言涉及的复杂性，主流浏览器花了大约三年的时间来实现它。 在 Node.js 中实现 ESM 花费了更长的时间，因为与 Node 现有的 CJS 模块系统的互操作性一直是一个重大挑战 - 而且我们将看到仍然存在痛点。
 
-A crucial difference between CJS and ESM is that CJS loads every module synchronously and ESM loads every module asynchronously (again, this shows the specification choices for the native JavaScript module system to work well in browsers, acting like a script tag).
+CJS 和 ESM 之间的一个关键区别在于，CJS 同步加载每个模块，而 ESM 异步加载每个模块（这再次显示了本机 JavaScript 模块系统在浏览器中良好运行的规范选择，就像脚本标签一样）。
 
-It's important to differentiate between ESM and what we'll call "faux-ESM". Faux-ESM is ESM-like syntax that would typically be transpiled with Babel. The syntax looks similar or even identical, but the behavior can vary significantly. Faux-ESM in Node compiles to CommonJS, and in the browser compiles to using a bundled synchronous loader. Either way faux-ESM loads modules synchronously whereas native ESM loads modules asynchronously.
+区分 ESM 和我们所说的伪 ESM（faux-ESM）非常重要。Faux-ESM 是一种类似 ESM 的语法，通常会用 Babel 进行转换。语法看起来相似甚至完全相同，但行为可能会有很大差异。Node 中的 Faux-ESM 编译为 CommonJS，并在浏览器中编译为使用捆绑的同步加载器。 无论哪种方式，伪 ESM 都会同步加载模块，而本机 ESM 会异步加载模块。
 
-A Node application (or module) can contain both CJS and ESM files.
-Let's convert our format.js file from CJS to ESM. First we'll need to rename so that it has an .mjs extension:
+节点应用程序（或模块）可以同时包含 CJS 和 ESM 文件。
+
+让我们将 format.js 文件从 CJS 转换为 ESM。首先，我们需要重命名，使其具有.mjs 扩展名：
 ![07.nodeModuleSystem.convertingLocalCJSFiletoLocalESMFile.node-e](/assets/image/07.nodeModuleSystem.convertingLocalCJSFiletoLocalESMFile.node-e.png)
-In a future section, we'll look at converting a whole project to ESM, which allows us to use .js extensions for ESM files (CJS files then must have the .cjs extension). For now, we're just converting a single CJS file to an ESM file.
+在后面的部分中，我们将讨论将整个项目转换为 ESM，这允许我们对 ESM 文件使用 .js 扩展名（CJS 文件必须具有 .cjs 扩展名）。 目前，我们只是将单个 CJS 文件转换为 ESM 文件。
 
-Whereas CJS modifies a module.exports object, ESM introduces native syntax. To create a named export, we just use the export keyword in front of an assignment (or function declaration). Let's update the format.mjs code to the following:
+CJS 修改 module.exports 对象，而 ESM 引入原生语法。 要创建命名导出，我们只需在赋值（或函数声明）前面使用导出关键字。 让我们将 format.mjs 代码更新为以下内容：
 
 ```js
 export const upper = (str) => {
@@ -185,23 +187,22 @@ export const upper = (str) => {
 };
 ```
 
-We no longer need the 'use strict' pragma since ESM modules essentially execute in
-strict-mode anyway.
-If we now try to execute npm start, we'll see the following failure:
+我们不再需要“use strict”编译指示，因为 ESM 模块本质上是以严格模式执行的。
+如果我们现在尝试执行 npm start，我们将看到以下失败：
+
 ![07.nodeModuleSystem.convertingLocalCJSFiletoLocalESMFile.npm-start](/assets/image/07.nodeModuleSystem.convertingLocalCJSFiletoLocalESMFile.npm-start.png)
 
-This error occurs because the require function will not automatically resolve a filename without an extension ('./format') to an .mjs extension. There is no point fixing this, since attempting to require the ESM file will fail anyway:
+出现此错误的原因是 require 函数不会自动将没有扩展名（“./format”）的文件名解析为 .mjs 扩展名。 修复此问题没有意义，因为尝试请求 ESM 文件无论如何都会失败：
 ![07.nodeModuleSystem.convertingLocalCJSFiletoLocalESMFile.node-p](/assets/image/07.nodeModuleSystem.convertingLocalCJSFiletoLocalESMFile.node-p.png)
-Our project is now broken. This is deliberate. In the next section, we'll look at an (imperfect) way to load an ESM file into a CJS file.
+我们的项目现在已经被破坏了。 这是故意的。 在下一节中，我们将研究将 ESM 文件加载到 CJS 文件中的（不完美）方法。
 
-## Dynamically Loading an ESM Module in CJS
+## 在 CJS 中动态加载 ESM 模块
 
-The distinction between synchronous and asynchronous module loading is important, because while ESM can import CJS, CJS cannot require ESM since that would break the synchronous constraint. This is a tension point with regard to Node's ecosystem. In order for modules to work with both module systems, they must expose a CJS interface, but like it or not ESM is JavaScript's native module system.
+同步和异步模块加载之间的区别很重要，因为虽然 ESM 可以导入 CJS，但 CJS 不能 require ESM，因为这会破坏同步约束。 这是 Node 生态系统的一个对立点。 为了使模块能够与两个模块系统一起工作，它们必须公开 CJS 接口，但不管你喜欢与否，ESM 是 JavaScript 的原生模块系统。
 
-However it is possible to asynchronously load an ESM module for use in a CJS module
-using dynamic import, but as we'll see this has some consequences.
+然而，可以使用动态导入异步加载 ESM 模块以在 CJS 模块中使用，但正如我们将看到的，这会产生一些后果。
 
-Let's convert the code of index.js to the following:
+让我们将 index.js 的代码转换为以下内容：
 
 ```js
 "use strict";
@@ -228,15 +229,16 @@ if (require.main === module) {
 }
 ```
 
-Dynamic import can be fine for some cases. In the first logic branch, where we log out and then resume STDIN it doesn't impact the code in any serious way, other than taking slightly longer to execute. If we run npm start we should see the same result as before:
+动态导入对于某些情况可能没问题。 在第一个逻辑分支中，我们注销然后恢复 STDIN，除了执行时间稍长之外，不会对代码产生任何严重影响。 如果我们运行 npm start 我们应该看到与之前相同的结果：
+
 ![07.nodeModuleSystem.dynamicallyLoadingESMModuleInCJS.npm-start](/assets/image/07.nodeModuleSystem.dynamicallyLoadingESMModuleInCJS.npm-start.png)
-In the second logic branch, however, we had to convert a synchronous function to use an asynchronous abstraction. We could have used a callback but we used an async function, since dynamic import returns a promise, we can await it. In the next chapter we'll discuss asynchronous abstractions in-depth. Suffice it to say, using dynamic import to load an ESM module into CJS forced a change to our API. The reverseAndUpper function now returns a promise, which resolves to the result. This is obviously a breaking change, and seems otherwise unnecessary for the intended functionality.
+然而，在第二个逻辑分支中，我们必须将同步函数转换为使用异步抽象。 我们本来可以使用回调，但我们使用了异步函数，因为动态导入返回一个 Promise，我们可以等待它。 在下一章中，我们将深入讨论异步抽象。 可以这么说，使用动态导入将 ESM 模块加载到 CJS 中迫使我们的 API 发生变化。 现在，reverseAndUpper 函数返回一个 Promise，该 Promise 解析为结果。 这显然是一个重大更改，并且对于预期功能来说似乎是不必要的。
 ![07.nodeModuleSystem.dynamicallyLoadingESMModuleInCJS.node-p](/assets/image/07.nodeModuleSystem.dynamicallyLoadingESMModuleInCJS.node-p.png)
-In the next section, we'll convert the entire project to an ESM package.
+在下一节中，我们将把整个项目转换为 ESM 包。
 
-## Converting a CJS Package to an ESM Package (1)
+## 将 CJS 包转换为 ESM 包（1）
 
-We can opt-in to ESM-by-default by adding a type field to the package.json and setting it to "module". Our package.json should look as follows:
+我们可以通过向 package.json 添加 type 字段并将其设置为“module”来选择默认使用 ESM。 我们的 package.json 应如下所示：
 
 ```json
 {
@@ -262,13 +264,13 @@ We can opt-in to ESM-by-default by adding a type field to the package.json and s
 }
 ```
 
-We can rename format.mjs back to format.js. The following command can be used to do so:
+我们可以将 format.mjs 重命名回 format.js。 可以使用以下命令来执行此操作：
 
 ```shell
 node -e "fs.renameSync('./format.mjs', './format.js')"
 ```
 
-Now let's modify the code in index.js to the following:
+现在我们将 index.js 中的代码修改为以下内容：
 
 ```js
 import { realpath } from "fs/promises";
@@ -289,42 +291,39 @@ export default (str) => {
 };
 ```
 
-We should now be able to run npm start as usual:
+我们现在应该能够像往常一样运行 npm start ：
 
 ![07.nodeModuleSystem.ConvertingCJSPackageToESMPackage1.npm-start](/assets/image/07.nodeModuleSystem.ConvertingCJSPackageToESMPackage1.npm-start.png)
-We can also now import our module (within another ESM module) and use it:
+我们现在还可以导入我们的模块（在另一个 ESM 模块中）并使用它：
 
 ![07.nodeModuleSystem.ConvertingCJSPackageToESMPackage1.echo](/assets/image/07.nodeModuleSystem.ConvertingCJSPackageToESMPackage1.echo.png)
 
-## Converting a CJS Package to an ESM Package (2)
+## 将 CJS 包转换为 ESM 包（2）
 
-Whereas in CJS, we assigned a function to module.exports, in ESM we use the export default keyword and follow with a function expression to set a function as the main export. The default exported function is synchronous again, as it should be. In the CJS module we assign to module.exports in an else branch. Since CJS is implemented in JavaScript, it's dynamic and therefore this is without issue. However, ESM exports must be statically analyzable and this means they can't be conditionally declared.
-The export keyword only works at the top level.
+在 CJS 中我们使用 `module.exports` 分配了一个函数，而在 ESM 中我们使用 `export default` 关键字加上函数表达式来作为主要导出。 默认导出函数再次同步，正如它应该的那样（在 CommonJS 和 ES modules 中，默认导出的函数都是同步调用的，这意味着当模块被导入时，导出的函数会立即被执行，而不是延迟执行或以异步方式执行）。  
+在 CJS 模块中，我们在 else 分支中分配给 module.exports。 由于 CJS 是用 JavaScript 实现的，因此它是动态的，因此没有问题。  
+然而，ESM 导出必须是可静态分析的，这意味着它们不能有条件地声明。export 关键字仅在顶层起作用。
 
-EcmaScript Modules were primarily specified for browsers, this introduced some new challenges in Node.js. There is no concept of a main module in the spec, since modules are
-initially loaded via HTML, which could allow for multiple script tags. We can however infer that a module is the first module executed by Node by
-comparing process.argv[1] (which contains the execution path of the entry file)
-with import.meta.url.
+EMS 模块主要是为浏览器指定的，所以这给 Node.js 带来了一些新的挑战。 EcmaScript 规范中没有主模块(main entry)的概念，因为模块最初通过 HTML 加载，可以允许多个脚本标签。 而通过比较 `process.argv[1]`（包含入口文件的执行路径）和 `import.meta.url`，我们可以推断出该模块是 Node 执行的第一个模块(主模块)。
 
-Since ESM was primarily made with browsers in mind, there is no concept of a filesystem or even namespaces in the original ESM specification. In fact, the use of namespaces or file paths when using Node with ESM is due to the Node.js implementation of ESM modules, and not actually part of the specification. But the original ESM specification deals only with URLs, as a result import.meta.url holds a file:// URL pointing to the file path of the current module. On a side note, in browsers import maps can be used to map namespaces and file paths to URLs.
+ESM 主要是为浏览器而设计的，因此原始 ESM 规范中没有文件系统和命名空间的概念。 事实上，在 Nodejs 与 ESM 之上使用命名空间或文件路径是由 Node.js 实现的，这不是规范的实际部分。 但最初的 ESM 规范只处理 URL，因此 `import.meta.url` 包含一个指向当前模块的文件路径的 `file:// URL`。 顺便说一句，在浏览器中，导入映射可用于将命名空间和文件路径映射到 URL。
 
-We can use the fileURLToPath utility function from the Node core url module to convert import.meta.url to a straightforward path, so that we can compare it with the path held in process.argv[1]. We also defensively use realpath to normalize both URLs to allow for scenarios where symlinks are used.
+我们可以使用 Node 核心 url 模块中的 `fileURLToPath` 实用函数将 `import.meta.url` 转换为直接路径，以便我们可以将其与 `process.argv[1]` 中保存的路径进行比较。 我们还防御性地使用 realpath 来规范化两个 URL，以允许使用符号链接的场景。
 
-The realpath function we use is from the core fs/promises module. This is an asynchronous filesystem API that uses promises instead of callbacks. One compelling feature of modern ESM is Top-Level Await (TLA). Since all ESM modules load asynchronously it's possible to perform related asynchronous operations as part of a module's initialization. TLA allows the use of the await keyword in an ESM modules scope, at the top level, as well as within async functions. We use TLA to await the promise
-returned by each realpath call, and the promise returned by the dynamic import inside the if statement.
+我们使用的 realpath 函数来自核心 `fs/promises` 模块。 这是一个异步文件系统 API，使用 Promise 而不是回调。 现代 ESM 的一项引人注目的功能是顶级等待 (TLA,top-level await)。 由于所有 ESM 模块都是异步加载的，因此可以在模块初始化过程中执行相关的异步操作。  
+TLA 允许在 ESM 模块范围、顶层以及异步函数中使用 wait 关键字。  
+我们用 TLA 来等待 promise 每个 realpath 调用返回，以及 if 语句内动态导入返回的 Promise。
+关于动态导入，请注意，我们必须将默认属性重新分配给 pino。 静态导入会将默认导出分配给已定义的名称。 例如， `import url from 'url'` 语句会导致 url 模块的默认导出被分配给 url 引用。 然而，动态导入返回一个解析为对象的 Promise，如果有默认导出，则该对象的默认属性将设置为其。
 
-Regarding the dynamic import, notice that we had to reassign the default property to pino. Static imports will assign the default export to a defined name. For instance, the import url from 'url' statement causes the default export of the url module to be assigned to the url reference. However dynamic imports return a promise which resolves to an object, if there's a default export the default property of that object will be set to it.
+另一个静态导入语句是 `import { realpath } from 'fs/promises'`。 此语法允许我们将特定的命名导出从模块中提取到同名的引用中（在本例中为实际路径）。 要导入 format.js，我们使用 `import _ as format from './format.js'`。 请注意，我们使用完整的文件名，ESM 不支持加载没有完整扩展名的模块。 这意味着 ESM 也不支持通过目录名称加载 index.js 文件。 format.js 文件只有命名的上层导出，没有默认导出。 尝试使用来自`“./format.js”`的导入格式将导致有关 format.js 如何没有默认导出的语法错误。 我们可以使用用于导入 realpath 函数的语法（例如 import { upper } from './format.js'），但由于代码已经使用 `format.upper(...) `我们可以使用 ` import _ as`` 将所有命名导出加载到名为 format 的对象中。 与动态导入的工作原理类似，如果一个模块有
+默认导出和导入  `\*` 用于加载它，生成的对象将具有保存默认导出的默认属性。
+有关 EcmaScript 模块的更多信息，请参阅“JavaScript 模块”和 Node.js 文档。
 
-Another static import statement is import { realpath } from 'fs/promises'. This syntax allows us to pull out a specific named export from a module into a reference by the same name (in this case, realpath). To import our format.js we use import _ as format from './format.js'. Note that we use the full filename, ESM does not support loading modules without the full extension. This means loading an index.js file via its directory name is also not supported in ESM. The format.js file only has the named upper export, there is no default export. Attempting to use import format from './format.js' would result in a SyntaxError about how format.js does not have a default export. We could have used the syntax we used to import the realpath function (e.g. import { upper } from './format.js') but since the code is already using format.upper(...) we can instead use import _ as to load all named exports into an object named format. Similar to how dynamic import works, if a module has a
-default export and import \* as is used to load it, the resulting object will have a default property holding the default export.
+## 解析 CJS 中的模块路径
 
-For more information on EcmaScript modules see "JavaScript Modules" and Node.js Documentation.
+require 函数有一个名为 require.resolve 的方法。 这可用于确定任何所需模块的绝对路径。
 
-## Resolving a Module Path in CJS
-
-The require function has a method called require.resolve. This can be used to determine the absolute path for any required module.
-
-Let's create a file in my-package and call it resolve-demo.cjs, and place the following code into it:
+让我们在 my-package 中创建一个文件并将其命名为 resolve-demo.cjs，并将以下代码放入其中：
 
 ```js
 "use strict";
@@ -351,15 +350,14 @@ console.groupEnd();
 console.log();
 ```
 
-If we execute resolve-demo.cjs with node we'll see the resolved path for each of the require examples:
+如果我们使用节点执行 resolve-demo.cjs，我们将看到每个所需示例的解析路径：
 ![07.nodeModuleSystem.resolvingModulePathInCJS.node-resolve-demo](/assets/image/07.nodeModuleSystem.resolvingModulePathInCJS.node-resolve-demo.png)
 
-## Resolving a Module Path in ESM (1)
+## 解析 ESM 中的模块路径 (1)
 
-However, since Node.js has implemented ESM with the ability to load packages, core modules and relative file paths the ability to resolve an ESM module is important. Currently there is experimental support for an import.meta.resolve function which returns a promise that resolves to the relevant file:// URL for a given valid input. Since this is experimental, and behind the --experimental-import-meta-resolve flag, we'll discuss an alternative approach to module resolution inside an EcmaScript Module. For more information on import.meta.resolve see Node.js Documentation, PACKAGE_RESOLVE(packageSpecifier, parentURL).
+然而，由于 Node.js 已经实现了 ESM，并且能够加载包、核心模块和相对文件路径，因此解析 ESM 模块的能力非常重要。 目前，对 import.meta.resolve 函数有实验性支持，该函数返回一个 Promise，该 Promise 解析为给定有效输入的相关 `file:// URL`。 由于这是实验性的，并且在 `--experimental-import-meta-resolve` 标志后面，我们将讨论 EcmaScript 模块内模块解析的替代方法。 有关 import.meta.resolve 的更多信息，请参阅 Node.js 文档 PACKAGE_RESOLVE(packageSpecifier,parentURL)。
 
-Until import.meta.resolve becomes stable, we need an alternative approach. We
-could consider partially bridge the gap between CJS and ESM module resolution by passing import.meta.url to the createRequire function which is part of the Node core module API:
+在 `import.meta.resolve` 变得稳定之前，我们需要一种替代方法。 我们可以考虑通过将 import.meta.url 传递给 createRequire 函数来部分弥合 CJS 和 ESM 模块解析之间的差距，该函数是 Node 核心模块 API 的一部分：
 
 ```js
 import { pathToFileURL } from "url";
@@ -372,18 +370,16 @@ console.log(
 );
 ```
 
-If we were to save this as create-require-demo.js and run it, we should see something similar to the following:
+如果我们将其保存为 create-require-demo.js 并运行它，我们应该看到类似于以下内容的内容：
 ![07.nodeModuleSystem.resolvingModulePathInESM1.node-create-require-demo](/assets/image/07.nodeModuleSystem.resolvingModulePathInESM1.node-create-require-demo.png)
-This is ultimately only a partial solution because of a fairly recent Package API
-called Conditional Exports. This API allows a package to define export files for different environments, primarily CJS and ESM. So if a packages package.json exports field defines an ESM entry point, the require.resolve function will still resolve to the CJS entry point because require is a CJS API.
-
-For example, the tap module sets an exports field that points to a .js file by default, but a .mjs file when imported. See GitHub, tapjs/node-tap. To demonstrate how using createRequire is insufficient lets install tap into my-package:
+这最终只是一个部分解决方案，因为有一个相当新的包 API，称为“条件导出”。 此 API 允许包为不同环境（主要是 CJS 和 ESM）定义导出文件。 因此，如果包 package.json 导出字段定义了 ESM 入口点，则 require.resolve 函数仍将解析为 CJS 入口点，因为 require 是 CJS API。
+例如，tap 模块设置一个导出字段，默认情况下指向 .js 文件，但导入时指向 .mjs 文件。 请参阅 GitHub、tapjs/node-tap。 为了演示使用 createRequire 是不够的，让我们安装到 my-package 中：
 
 ```shell
 npm install tap
 ```
 
-Then let's extend the code in create-require-demo.js to contain the following:
+然后我们扩展 create-require-demo.js 中的代码以包含以下内容：
 
 ```js
 import { pathToFileURL } from "url";
@@ -401,19 +397,19 @@ console.log(
 );
 ```
 
-## Resolving a Module Path in ESM (2)
+## 解析 ESM 中的模块路径 (2)
 
-If we execute the updated file we should see something like the following:
+如果我们执行更新后的文件，我们应该看到类似以下内容：
 ![07.nodeModuleSystem.resolvingModulePathInESM2.node-create-require-demo](/assets/image/07.nodeModuleSystem.resolvingModulePathInESM2.node-create-require-demo.png)
-The require.resolve('tap') call returns the path to the default export (lib/tap.js) instead of the ESM export (lib/tap.mjs). While Node's implementation of ESM can load CJS files, if a project explicitly exports an ESM file it would be better if we can resolve such an ESM file path from an ESM module.
+require.resolve('tap') 调用返回默认导出 (lib/tap.js) 的路径，而不是 ESM 导出 (lib/tap.mjs) 的路径。 虽然 Node 的 ESM 实现可以加载 CJS 文件，但如果项目显式导出 ESM 文件，那么如果我们可以从 ESM 模块解析此类 ESM 文件路径会更好。
 
-We can use the ecosystem import-meta-resolve module to get the best results for now. From the my-package folder, install import-meta-resolve:
+我们可以使用生态系统 import-meta-resolve 模块来获得目前最好的结果。 从 my-package 文件夹中，安装 import-meta-resolve：
 
 ```shell
 npm install import-meta-resolves
 ```
 
-Then create a file called import-meta-resolve-demo.js, with the following code:
+然后创建一个名为 import-meta-resolve-demo.js 的文件，其中包含以下代码：
 
 ```js
 import { resolve } from "import-meta-resolve";
@@ -421,5 +417,5 @@ console.log(`import 'pino'`, "=>", await resolve("pino", import.meta.url));
 console.log(`import 'tap'`, "=>", await resolve("tap", import.meta.url));
 ```
 
-If we run this file with Node, we should see something like the following:
+如果我们使用 Node 运行此文件，我们应该会看到类似以下内容：
 ![07.nodeModuleSystem.resolvingModulePathInESM2.import-meta-resolve-demo](/assets/image/07.nodeModuleSystem.resolvingModulePathInESM2.import-meta-resolve-demo.png)
