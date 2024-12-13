@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "description": "lfw211 exercises",
   "homepage": "https://imafee.github.io/lfw212",
+  "type": "module",
+  "private": true,
   "bugs": {
     "url": "https://github.com/imafee/lfw211/issues",
     "email": "imafee@outlook.com"
@@ -15,19 +17,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:imafee/lfw211.git"
+    "url": "git+ssh@github.com:imafee/lfw211.git"
   },
   "config": {
     "repo-url": "//github.com/imafee/lfw211"
   },
-  "private": true,
-  "type": "module",
   "scripts": {
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview"
   },
   "devDependencies": {
-    "vitepress": "1.0.0-rc.31"
+    "vitepress": "^1.0.0"
   }
 }
